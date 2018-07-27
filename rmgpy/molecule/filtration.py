@@ -55,6 +55,11 @@ def filter_structures(mol_list, mark_unreactive=True):
     lone pairs. This method filters them out by minimizing the number of C/N/O/S atoms without a full octet.
     """
 
+    from afm.fragment import Fragment
+    if isinstance(mol_list[0], Fragment):
+        for mol in mol_list:
+            mol.update()
+
     if not all([(mol.multiplicity == mol_list[0].multiplicity) for mol in mol_list]):
         raise ValueError("Cannot filter structures with different multiplicities!")
 
@@ -93,12 +98,14 @@ def get_octet_deviation(mol):
     """
     Returns the octet deviation for a :class:Molecule object
     """
-
-    if not isinstance(mol, Molecule):
+    from afm.fragment import Fragment, CuttingLabel
+    if not isinstance(mol, (Molecule, Fragment)):
         raise ValueError("Octet deviation could only be determined for Molecule objects.")
 
     octet_deviation = 0  # This is the overall "score" for the molecule, summed across all C/N/O/S atoms
     for atom in mol.vertices:
+        if isinstance(atom, CuttingLabel):
+            continue
         val_electrons = 2 * (int(atom.getBondOrdersForAtom()) + atom.lonePairs) + atom.radicalElectrons
         if atom.isCarbon():
             octet_deviation += abs(8 - val_electrons)  # expecting C to be near octet

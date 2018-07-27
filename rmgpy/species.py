@@ -520,7 +520,7 @@ class Species(object):
         """
         `True` if the species has at least one reactive molecule, `False` otherwise
         """
-        cython.declare(molecule=Molecule)
+        #cython.declare(molecule=Molecule)
         return any([molecule.reactive for molecule in self.molecule])
 
     def copy(self, deep=False):
