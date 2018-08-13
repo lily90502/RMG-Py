@@ -167,10 +167,15 @@ class Species(object):
         `molecule` is already greater than one, it is assumed that all of the
         resonance structures have already been generated.
         """
+        from afm.fragment import Fragment
+
         if len(self.molecule) == 1:
             if not self.molecule[0].atomIDValid():
                 self.molecule[0].assignAtomIDs()
-            self.molecule = self.molecule[0].generate_resonance_structures(keep_isomorphic=keep_isomorphic,
+            if isinstance(self.molecule[0], Fragment):
+                self.molecule = Fragment().generate_resonance_structures(self.molecule[0])
+            else:
+                self.molecule = self.molecule[0].generate_resonance_structures(keep_isomorphic=keep_isomorphic,
                                                                            filter_structures=filter_structures)
     
     def isIsomorphic(self, other, generate_res=False):
@@ -433,7 +438,7 @@ class Species(object):
         requires additional calculateSymmetryNumber calls.
         """
         if self.symmetryNumber < 1:
-            cython.declare(resonanceHybrid = Molecule, maxSymmetryNum = cython.short)
+            cython.declare(resonanceHybrid = Graph, maxSymmetryNum = cython.short)
             resonanceHybrid = self.getResonanceHybrid()
             try:
                 self.symmetryNumber = resonanceHybrid.getSymmetryNumber()
@@ -462,9 +467,9 @@ class Species(object):
                        numResonanceStructures=cython.short, structureNum = cython.short,
                        oldBondOrder = cython.float,
                        index1 = cython.short, index2 = cython.short,
-                      newMol=Molecule, oldMol = Molecule,
-                      atom1=Atom, atom2=Atom, 
-                      bond=Bond,  
+                      newMol=Graph, oldMol = Graph,
+                      atom1=Vertex, atom2=Vertex,
+                      bond=Edge,
                       atoms=list,)
 
         atomsFromStructures = []

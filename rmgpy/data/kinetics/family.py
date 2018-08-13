@@ -1195,12 +1195,13 @@ class KineticsFamily(Database):
         # Also copy structures so we don't modify the originals
         # Since the tagging has already occurred, both the reactants and the
         # products will have tags
-        if isinstance(reactantStructures[0], Group):
+
+        if any(isinstance(reactant, Fragment) for reactant in reactantStructures):
+            reactantStructure = Fragment()
+        elif isinstance(reactantStructures[0], Group):
             reactantStructure = Group()
         elif isinstance(reactantStructures[0], Molecule):
             reactantStructure = Molecule()
-        elif isinstance(reactantStructures[0], Fragment):
-            reactantStructure = Fragment()
 
         for s in reactantStructures:
             reactantStructure = reactantStructure.merge(s.copy(deep=True))

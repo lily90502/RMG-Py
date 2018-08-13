@@ -25,16 +25,17 @@
 #                                                                             #
 ###############################################################################
 
+from .graph cimport Vertex, Edge, Graph
 from .molecule cimport Atom, Bond, Molecule
 
 ################################################################################
 
-cpdef float calculateAtomSymmetryNumber(Molecule molecule, Atom atom) except -1
+cpdef float calculateAtomSymmetryNumber(Graph molecule, Vertex atom) except -1
 
-cpdef float calculateBondSymmetryNumber(Molecule molecule, Atom atom1, Atom atom2) except -1
+cpdef float calculateBondSymmetryNumber(Graph molecule, Vertex atom1, Vertex atom2) except -1
 
-cpdef float calculateAxisSymmetryNumber(Molecule molecule) except -1
+cpdef float calculateAxisSymmetryNumber(Graph molecule) except -1
 
-cpdef float calculateCyclicSymmetryNumber(Molecule molecule) except -1
+cpdef float calculateCyclicSymmetryNumber(Graph molecule) except -1
 
-cpdef float calculateSymmetryNumber(Molecule molecule) except -1
+cpdef float calculateSymmetryNumber(Graph molecule) except -1
